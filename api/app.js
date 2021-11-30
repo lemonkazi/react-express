@@ -5,11 +5,25 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
 
+
+
+
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var testAPIRouter = require("./routes/testAPI");
 
+var token = require("./routes/token");
+var tokenVerify = require("./routes/verify");
+
 var app = express();
+
+
+
+let PORT = process.env.PORT || 9000;
+// app.listen(PORT, () => {
+//   console.log(`Server is up and running on ${PORT} ...`);
+// });
+
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -25,6 +39,11 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
+app.use("/token", token);
+app.use("/token-verify", tokenVerify);
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
