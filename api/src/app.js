@@ -24,6 +24,10 @@ let PORT = process.env.PORT || 9000;
 //   console.log(`Server is up and running on ${PORT} ...`);
 // });
 
+app.listen(PORT, () => {
+    console.log(`Timezones by location application is running on port ${PORT}.`);
+});
+
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
