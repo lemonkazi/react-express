@@ -2,6 +2,10 @@
 
 # dependencies
 api/node_modules
+client/node_modules
+dist
+.env
+yarn.lock
 
 # testing
 /coverage
