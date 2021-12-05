@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ErrorRequestHandler } from 'express';
+import { Route, RouteMethod, routes } from './routes';
+//import event from '../utility/testing-setup/utils/testEvent';
 
 var createError = require("http-errors");
 var express = require("express");
@@ -27,9 +29,7 @@ let PORT = process.env.PORT || 9000;
 //   console.log(`Server is up and running on ${PORT} ...`);
 // });
 
-app.listen(PORT, () => {
-    console.log(`Timezones by location application is running on port ${PORT}.`);
-});
+
 
 
 // view engine setup
@@ -68,5 +68,88 @@ app.use(function(err, req: Request, res: Response, next: NextFunction) {
     res.status(err.status || 500);
     res.render("error");
 } as ErrorRequestHandler);
+
+const getRequest = (route: Route) => {
+    app.get(route.endpoint, async (req: any, res: any) => {
+        console.log('GET ', req.path);
+        console.log('Query params =  ', req.query);
+        console.log('Path params =  ', req.params);
+        // event.httpMethod = route.method;
+        // event.pathParameters = req.params;
+        // event.queryStringParameters = req.query;
+        // event.headers = req.headers;
+        // const response: any = await route.handler(event, context);
+        // res.send(response.body);
+    });
+};
+
+const postRequest = (route: Route) => {
+    app.post(route.endpoint, async (req: any, res: any) => {
+        console.log('POST ', route.endpoint);
+        //console.log('post body = ', event.body);
+        // event.httpMethod = route.method;
+        // event.headers = req.headers;
+        // if (typeof req.body == 'object') {
+        //     event.body = JSON.stringify(req.body);
+        // } else {
+        //     event.body = req.body;
+        // }
+        // const response: any = await route.handler(event, context);
+        // res.send(response.body);
+    });
+};
+
+
+const putRequest = (route: Route) => {
+    app.put(route.endpoint, async (req: any, res: any) => {
+        console.log('PUT ', req.path);
+        console.log('PUT body =  ', req.body);
+        // event.httpMethod = route.method;
+        // event.headers = req.headers;
+        // event.pathParameters = req.params;
+        const body = req.body;
+        // event.body = body;
+        // const response: any = await route.handler(event, context);
+        // res.send(response.body);
+    });
+};
+
+const deleteRequest = (route: Route) => {
+    app.delete(route.endpoint, async (req: any, res: any) => {
+        console.log('DELETE ', route.endpoint);
+        // event.httpMethod = route.method;
+        // event.headers = req.headers;
+        // event.pathParameters = req.params;
+        // const response: any = await route.handler(event, context);
+        // res.send(response.body);
+    });
+};
+
+routes.forEach((route) => {
+    switch (route.method) {
+        case RouteMethod.GET:
+            getRequest(route);
+            break;
+        case RouteMethod.POST:
+            postRequest(route);
+            break;
+        case RouteMethod.PUT:
+            putRequest(route);
+            break;
+        case RouteMethod.DELETE:
+            deleteRequest(route);
+            break;
+        default:
+            console.log('error, route method invalid');
+            break;
+    }
+});
+
+app.listen(PORT, () => {
+    console.log(`Timezones by location application is running on port ${PORT}.`);
+    console.log(`Endpoints: `);
+    routes.forEach((route) => console.log(`${route.method} ${route.endpoint}`));
+});
+
 
 module.exports = app;
