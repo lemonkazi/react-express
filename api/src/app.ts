@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { ErrorRequestHandler } from 'express';
 import { Route, RouteMethod, routes } from './routes';
 //import event from '../utility/testing-setup/utils/testEvent';
+import "reflect-metadata";
 
 var createError = require("http-errors");
 var express = require("express");

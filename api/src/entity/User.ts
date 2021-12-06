@@ -16,8 +16,8 @@ export class User {
     @Column()
     public email?: string;
 
-    @Column({ name: 'default_restaurant' })
-    public defaultRestaurant?: number;
+    // @Column({ name: 'default_restaurant' })
+    // public defaultRestaurant?: number;
 
     @Column()
     public role?: UserRole;
@@ -25,8 +25,8 @@ export class User {
     @Column()
     public username?: string;
 
-    @Column()
-    public department?: string;
+    // @Column()
+    // public department?: string;
 
     // @ManyToOne((type) => Organization, (organization) => organization.user, {
     //     nullable: true,
