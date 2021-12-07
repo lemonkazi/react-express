@@ -11,7 +11,7 @@ export default class ConnectionManager {
         if (!this.connection) {
             try {
                 this.connection = await createConnection({
-                    type: 'postgres',
+                    type: 'mysql',
                     host: dbConfig.host,
                     port: dbConfig.port,
                     username: dbConfig.username,
