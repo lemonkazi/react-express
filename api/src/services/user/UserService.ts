@@ -5,17 +5,14 @@ import BaseService from '../BaseService';
 
 
 interface UserPostBody {
-    organizationId: number;
     email: string;
     username: string;
-    department: string;
     role: UserRole;
 }
 
 interface UserPutBody {
     role: UserRole;
     username: string;
-    department: string;
 }
 
 export interface UserGetParams {
@@ -26,10 +23,13 @@ export default class UserService extends BaseService {
     public async _get(queryParams: UserGetParams, email: string) {
         return this.transaction(async (manager: EntityManager) => {
             const userDao = new UserDao(manager);
-            const user = await userDao.findByEmail(email);
-            // if (user && user.organization?.id) {
-            //     return await userDao.findByOrganizationId(user.organization.id, queryParams);
-            // }
+            //const user = await userDao.findByEmail(email);
+            const user = await userDao.find(queryParams);
+            console.log('ssssssssssssssssssssssss');
+            console.log(queryParams);
+            if (user) {
+                return user;
+            }
         });
     }
 
@@ -40,8 +40,7 @@ export default class UserService extends BaseService {
             const user = await userDao.create({
                 email: requestBody.email,
                 role: requestBody.role,
-                username: requestBody.username,
-                department: requestBody.department,
+                username: requestBody.username
             });
 
           

@@ -19,12 +19,5 @@ export default class UserDao extends BaseDao {
         });
     }
 
-    async findByOrganizationId(organizationId: number, queryParams: UserGetParams) {
-        return this.repository.find({
-            where: {
-                organization: organizationId,
-                ...queryParams,
-            },
-        });
-    }
+    
 }
