@@ -35,6 +35,16 @@ let PORT = process.env.PORT || 9000;
 // app.set("view engine", "jade");
 
 app.use(cors());
+// function defaultContentTypeMiddleware (req:any, res:any, next:any) {
+//     console.log('ddddddds');
+//     console.log(req.body);
+//     //req.headers['content-type'] = req.headers['content-type'] || 'application/json';
+//     //next();
+//   }
+  
+// app.use(defaultContentTypeMiddleware);
+//app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
 

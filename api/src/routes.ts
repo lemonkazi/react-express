@@ -22,11 +22,11 @@ export const routes: Route[] = [
       
       method: RouteMethod.GET,
   },
-  // {
-  //     endpoint: '/apis/v1/users',
-  //     handler: userHandler,
-  //     method: RouteMethod.POST,
-  // },
+  {
+      endpoint: '/apis/v1/users',
+      handler: userHandler,
+      method: RouteMethod.POST,
+  },
   // {
   //     endpoint: '/apis/v1/users/:userId',
   //     //handler: userHandler,

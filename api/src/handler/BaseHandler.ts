@@ -1,4 +1,4 @@
-
+import { APIGatewayEvent } from 'aws-lambda';
 import { ObjectLiteral } from 'typeorm';
 import Request from '../lib/request/request';
 import * as Response from '../lib/response/response';
@@ -22,7 +22,7 @@ export default abstract class BaseHandlerRDS<Service> {
     protected doPut: boolean;
     protected doGet: boolean;
     protected doDelete: boolean;
-    protected event: any;
+    protected event: APIGatewayEvent;
     protected context: any; // Context,
     protected service: any;
     protected resourcePath: string;
@@ -36,7 +36,7 @@ export default abstract class BaseHandlerRDS<Service> {
         doPut: boolean,
         doGet: boolean,
         doDelete: boolean,
-        event: any,
+        event: APIGatewayEvent,
         context: any, // Context,
         service: Service,
     ) {
@@ -63,7 +63,9 @@ export default abstract class BaseHandlerRDS<Service> {
                 return await this._get();
             case 'POST':
                 if (!this.doPost) return this.unhandledMethod();
-                return await this._post();
+                
+                console.log(this.event);
+                //return await this._post();
             case 'PUT':
                 if (!this.doPut) return this.unhandledMethod();
                 return await this._put();

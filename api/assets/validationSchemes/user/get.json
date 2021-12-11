@@ -4,6 +4,12 @@
   "properties": {
       "email": {
           "type": "string"
+      },
+      "username": {
+        "type": "string"
+      },
+      "role": {
+        "type": "string"
       }
   },
   "required": [],

@@ -25,8 +25,7 @@ export default class UserService extends BaseService {
             const userDao = new UserDao(manager);
             //const user = await userDao.findByEmail(email);
             const user = await userDao.find(queryParams);
-            console.log('ssssssssssssssssssssssss');
-            console.log(queryParams);
+            
             if (user) {
                 return user;
             }
@@ -37,15 +36,15 @@ export default class UserService extends BaseService {
         return this.transaction(async (manager: EntityManager) => {
             const userDao = new UserDao(manager);
  
-            const user = await userDao.create({
-                email: requestBody.email,
-                role: requestBody.role,
-                username: requestBody.username
-            });
+            // const user = await userDao.create({
+            //     email: requestBody.email,
+            //     role: requestBody.role,
+            //     username: requestBody.username
+            // });
 
           
             
-            return await userDao.findById(user.id);
+            return await userDao.findById(1);
         });
     }
 
