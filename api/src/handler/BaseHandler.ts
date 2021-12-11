@@ -7,10 +7,10 @@ import { ResourceNotFoundError, UnauthorizedError } from '../lib/utils/customErr
 import { Logger, LogLevel } from '../logger';
 
 // postgres returns number type as string, so change it to return floats.
-const types = require('pg').types;
-types.setTypeParser(1700, function (val: any) {
-    return parseFloat(val);
-});
+// const types = require('pg').types;
+// types.setTypeParser(1700, function (val: any) {
+//     return parseFloat(val);
+// });
 
 const logger = new Logger();
 
