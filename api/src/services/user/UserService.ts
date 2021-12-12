@@ -35,16 +35,20 @@ export default class UserService extends BaseService {
     public async _post(requestBody: UserPostBody, email: string): Promise<User> {
         return this.transaction(async (manager: EntityManager) => {
             const userDao = new UserDao(manager);
- 
-            // const user = await userDao.create({
-            //     email: requestBody.email,
-            //     role: requestBody.role,
-            //     username: requestBody.username
-            // });
-
-          
             
-            return await userDao.findById(1);
+            const user = await userDao.create({
+                email: requestBody.email,
+                role: requestBody.role,
+                username: requestBody.username
+            });
+
+            // if (requestBody.assignees.length > 0) {
+            //     const assignees = await this.createAssignees(user.id, requestBody.assignees);
+            //     await assigneeDao.insertAssignees(assignees);
+            // }
+            if (user) {
+                return await userDao.findById(user.id);
+            }
         });
     }
 

@@ -3,7 +3,8 @@
   "type": "object",
   "properties": {
       "email": {
-          "type": "string"
+        "type": "string",
+        "minLength": 4
       },
       "username": {
           "type": "string"

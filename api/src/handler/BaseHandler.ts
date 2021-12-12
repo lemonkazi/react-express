@@ -63,9 +63,7 @@ export default abstract class BaseHandlerRDS<Service> {
                 return await this._get();
             case 'POST':
                 if (!this.doPost) return this.unhandledMethod();
-                
-                console.log(this.event);
-                //return await this._post();
+                return await this._post();
             case 'PUT':
                 if (!this.doPut) return this.unhandledMethod();
                 return await this._put();
