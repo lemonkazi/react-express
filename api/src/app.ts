@@ -4,13 +4,13 @@ import { Route, RouteMethod, routes } from './routes';
 //import event from '../utility/testing-setup/utils/testEvent';
 import "reflect-metadata";
 
-var createError = require("http-errors");
+//var createError = require("http-errors");
 var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
+//var path = require("path");
+//var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 
 
 
