@@ -2,6 +2,7 @@ import { EntityManager } from 'typeorm';
 import UserDao from '../../dao/user/UserDao';
 import { User, UserRole } from '../../entity/User';
 import BaseService from '../BaseService';
+import * as Response from '../../lib/response/response';
 
 
 interface UserPostBody {
@@ -35,7 +36,13 @@ export default class UserService extends BaseService {
     public async _post(requestBody: UserPostBody, email: string): Promise<User> {
         return this.transaction(async (manager: EntityManager) => {
             const userDao = new UserDao(manager);
+            const userExist = await userDao.findByEmail(requestBody.email);
+
             
+            if (userExist) {
+                return Promise.reject({ message: 'User already exist with this email' });
+                //return "User already exist with this email";
+            }
             const user = await userDao.create({
                 email: requestBody.email,
                 role: requestBody.role,
