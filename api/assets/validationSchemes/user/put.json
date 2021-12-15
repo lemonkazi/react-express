@@ -7,15 +7,6 @@
       },
       "username": {
           "type": "string"
-      },
-      "department": {
-          "type": "string"
-      },
-      "assignees": {
-          "type": "array"
-      },
-      "defaultRestaurant": {
-          "type": "number"
       }
   },
   "required": [],
