@@ -7,6 +7,10 @@
       },
       "username": {
           "type": "string"
+      },
+      "email": {
+        "type": "string",
+        "minLength": 4
       }
   },
   "required": [],

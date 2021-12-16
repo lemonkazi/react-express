@@ -1,3 +1,4 @@
+import { APIGatewayEvent } from 'aws-lambda';
 import { EntityManager } from 'typeorm';
 import UserDao from '../../dao/user/UserDao';
 import { User, UserRole } from '../../entity/User';
@@ -61,18 +62,20 @@ export default class UserService extends BaseService {
 
     public async _put(
         requestBody: UserPutBody,
-       // pathParameters: APIGatewayEvent['pathParameters'],
+        pathParameters: APIGatewayEvent,
         email: string,
     ) {
-       // const id = parseInt(pathParameters!.userId, 10);
+        const id = parseInt((<any>pathParameters).userId, 10);
+        
         return this.transaction(async (manager: EntityManager) => {
             const userDao = new UserDao(manager);
-            // const user = await userDao.findById(id);
-            // if (user) {
-                
-            //     await userDao.update(id, othersBody);
-            //     return await userDao.findById(id);
-            // }
+            const user = await userDao.findById(id);
+            //console.log(user)
+            if (user) {
+                const { ...othersBody } = requestBody;
+                await userDao.update(id, othersBody);
+                return await userDao.findById(id);
+            }
             return Promise.reject("User don't exist");
         });
     }
