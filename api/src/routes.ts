@@ -32,9 +32,9 @@ export const routes: Route[] = [
       handler: userHandler,
       method: RouteMethod.PUT,
   },
-  // {
-  //     endpoint: '/apis/v1/users/:userId',
-  //     //handler: userHandler,
-  //     method: RouteMethod.DELETE,
-  // },
+  {
+      endpoint: '/apis/v1/users/:userId',
+      handler: userHandler,
+      method: RouteMethod.DELETE,
+  },
 ];

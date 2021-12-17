@@ -48,6 +48,16 @@ app.use(cors());
 
 app.use(logger("dev"));
 
+/** Require multer */
+const multer = require('multer');
+
+/** Decode Form URL Encoded data */
+app.use(express.urlencoded());
+
+/** Decode JSON data */
+app.use(express.json());
+app.use(multer({dest:'./uploads/'}).any());
+
 
 
 // var indexRouter = require("./routes/index");
@@ -87,16 +97,6 @@ app.use(function(err, req: Request, res: Response, next: NextFunction) {
     res.render("error");
 } as ErrorRequestHandler);
 
-
-/** Require multer */
-const multer = require('multer');
-
-/** Decode Form URL Encoded data */
-app.use(express.urlencoded());
-
-/** Decode JSON data */
-app.use(express.json());
-app.use(multer({dest:'./uploads/'}).any());
 
 const getRequest = (route: Route) => {
     app.get(route.endpoint, async (req: any, res: any) => {

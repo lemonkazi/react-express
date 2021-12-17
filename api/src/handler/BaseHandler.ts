@@ -160,7 +160,7 @@ export default abstract class BaseHandlerRDS<Service> {
         try {
             const pathParameters = this.event.pathParameters!;
             const result = await this.service._delete(pathParameters, this.emailUser);
-            response = new Response.DeleteResponse().create();
+            response = new Response.DeleteResponse(result).create();
         } catch (error:any) {
             return this.buildError(error);
         }

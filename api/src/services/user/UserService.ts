@@ -21,6 +21,7 @@ export interface UserGetParams {
     email: string;
 }
 
+
 export default class UserService extends BaseService {
     public async _get(queryParams: UserGetParams, email: string) {
         return this.transaction(async (manager: EntityManager) => {
@@ -80,15 +81,19 @@ export default class UserService extends BaseService {
         });
     }
 
-    public async _delete(email: string) {
-        //const id = parseInt(pathParameters!.userId, 10);
+    public async _delete(pathParameters: APIGatewayEvent['pathParameters'], email: string): Promise<any> {
+    
+        const id = parseInt((<any>pathParameters).userId, 10);
+        console.log(id);
         return this.transaction(async (manager: EntityManager) => {
             const userDao = new UserDao(manager);
-            // const user = await userDao.findById(id);
-            // const deleted = await userDao.delete(id);
-            // if (deleted) {
-                
-            // }
+            const user = await userDao.findById(id);
+            const deleted = await userDao.delete(id);
+            if (deleted) {
+                return Promise.resolve('USER DELETED');
+            } else{
+                return Promise.resolve('DELETE FAILED');
+            }
         });
     }
 }

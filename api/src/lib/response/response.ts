@@ -72,7 +72,7 @@ export class GetResponse extends BaseResponse {
 
 // tslint:disable-next-line: max-classes-per-file
 export class DeleteResponse extends BaseResponse {
-    constructor() {
-        super(204, BaseResponse.createCorsHeader(), {});
+    constructor(bodyObject: object) {
+        super(204, BaseResponse.createCorsHeader(), bodyObject);
     }
 }
