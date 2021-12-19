@@ -7,7 +7,8 @@
         "pattern": "^\\S+@\\S+\\.\\S+$",
         "format": "email",
         "minLength": 6,
-        "maxLength": 127
+        "maxLength": 127,
+        "description": "Email of the user"
       },
       "username": {
           "type": "string"
