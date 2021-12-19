@@ -4,7 +4,10 @@
   "properties": {
       "email": {
         "type": "string",
-        "minLength": 4
+        "pattern": "^\\S+@\\S+\\.\\S+$",
+        "format": "email",
+        "minLength": 6,
+        "maxLength": 127
       },
       "username": {
           "type": "string"
