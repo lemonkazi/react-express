@@ -2,9 +2,12 @@ import { EntityManager, Repository } from 'typeorm';
 import BaseDao from '../BaseDao';
 import { User } from '../../entity/User';
 import { UserGetParams } from '../../services/user/UserService';
+//import * as bcrypt from 'bcrypt';
+const bcrypt = require('bcrypt');
 
 export default class UserDao extends BaseDao {
     protected repository: Repository<User>;
+    private saltRounds= 10;
 
     constructor(manager: EntityManager) {
         super(manager);
@@ -18,6 +21,17 @@ export default class UserDao extends BaseDao {
             },
         });
     }
+
+    // async findByEmailWithPassword(email: string): Promise<any> | null {
+    //     return await this.repository.findOne({
+    //         where: {
+    //             email,
+    //         },
+    //         {
+    //             select: ['email', 'password'],
+    //         },
+    //     });
+    // }
 
     async getHash(password: string): Promise<string> {
         return await bcrypt.hash(password, this.saltRounds);

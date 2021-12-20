@@ -20,6 +20,21 @@ export class UserTable1638786818665 implements MigrationInterface {
                         isUnique: false,
                     },
                     {
+                        name: 'username',
+                        type: 'varchar',
+                        isUnique: false,
+                    },
+                    {
+                        name: 'password',
+                        type: 'varchar',
+                        isNullable: true,
+                    },
+                    {
+                        name: 'role',
+                        type: 'varchar',
+                        default: "'user'",
+                    },
+                    {
                         name: 'is_admin',
                         type: 'boolean',
                         default: false,
@@ -49,22 +64,7 @@ export class UserTable1638786818665 implements MigrationInterface {
             true,
         );
 
-        await queryRunner.addColumn(
-            'users',
-            new TableColumn({
-                name: 'role',
-                type: 'varchar',
-                default: "'user'",
-            }),
-        );
-        await queryRunner.addColumn(
-            'users',
-            new TableColumn({
-                name: 'username',
-                type: 'varchar',
-                isNullable: true,
-            }),
-        );
+       
 
         // await queryRunner.addColumn(
         //     'users',

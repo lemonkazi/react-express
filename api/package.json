@@ -13,11 +13,13 @@
     "typeorm:cli": "ts-node -r tsconfig-paths/src ./node_modules/typeorm/cli.js -f ormconfig.json",
     "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
     "migration:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert",
-    "migration:create": "ts-node ./node_modules/typeorm/cli.js migration:create -n"
+    "migration:create": "ts-node ./node_modules/typeorm/cli.js migration:create -n",
+    "seed:create": "ts-node ./node_modules/typeorm/cli.js -d ./src/seeds migration:create -c seed -n "
   },
   "dependencies": {
     "@types/aws-lambda": "^8.10.86",
     "ajv": "^8.8.2",
+    "bcrypt": "^5.0.1",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
