@@ -35,11 +35,6 @@ export class UserTable1638786818665 implements MigrationInterface {
                         default: "'user'",
                     },
                     {
-                        name: 'is_admin',
-                        type: 'boolean',
-                        default: false,
-                    },
-                    {
                         name: 'created_at',
                         type: 'timestamp',
                         default: 'now()',
