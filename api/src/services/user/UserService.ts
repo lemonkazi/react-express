@@ -10,11 +10,13 @@ interface UserPostBody {
     email: string;
     username: string;
     role: UserRole;
+    password: string;
 }
 
 interface UserPutBody {
     role: UserRole;
     username: string;
+    password: string;
 }
 
 export interface UserGetParams {
@@ -48,7 +50,8 @@ export default class UserService extends BaseService {
             const user = await userDao.create({
                 email: requestBody.email,
                 role: requestBody.role,
-                username: requestBody.username
+                username: requestBody.username,
+                password: requestBody.password
             });
 
             // if (requestBody.assignees.length > 0) {
