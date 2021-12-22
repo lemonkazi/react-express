@@ -4,8 +4,6 @@
   "properties": {
       "email": {
         "type": "string",
-        "pattern": "^\\S+@\\S+\\.\\S+$",
-        "format": "email",
         "minLength": 6,
         "maxLength": 127,
         "description": "Email of the user"
@@ -15,6 +13,9 @@
       },
       "role": {
           "type": "string"
+      },
+      "password": {
+        "type": "string"
       }
   },
   "required": ["email"],

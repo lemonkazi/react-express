@@ -1,5 +1,3 @@
-const seeds = process.env.NODE_ENV == 'local' ? 'src/seeds/**/*.ts' : '';
-
 module.exports = {
     type: 'mysql',
     host: process.env.DB_HOST,
@@ -10,12 +8,11 @@ module.exports = {
     synchronize: false,
     logging: false,
     entities: ['src/entity/**/*.ts'],
-    migrations: ['src/migration/**/*.ts', seeds],
+    migrations: ['src/migration/**/*.ts'],
     subscribers: ['src/subscribers/**/*.ts'],
     cli: {
         entitiesDir: 'src/entity',
         migrationsDir: 'src/migration',
         subscribersDir: 'src/subscribers',
-    },
-    seeds: ['src/seeds/**/*.ts'],
+    }
 };

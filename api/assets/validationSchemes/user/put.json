@@ -10,11 +10,12 @@
       },
       "email": {
         "type": "string",
-        "pattern": "^\\S+@\\S+\\.\\S+$",
-        "format": "email",
         "minLength": 6,
         "maxLength": 127,
         "description": "Email of the user"
+      },
+      "password": {
+        "type": "string"
       }
   },
   "required": [],

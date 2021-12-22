@@ -76,6 +76,10 @@ export default class UserService extends BaseService {
             const user = await userDao.findById(id);
             //console.log(user)
             if (user) {
+
+                if (requestBody.password) {
+                    requestBody.password = await userDao.getHash(requestBody.password);
+                }
                 const { ...othersBody } = requestBody;
                 await userDao.update(id, othersBody);
                 return await userDao.findById(id);
