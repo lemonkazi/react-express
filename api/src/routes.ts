@@ -1,5 +1,6 @@
 import {
   userHandler,
+  authHandler
 } from './index';
 
 export enum RouteMethod {
@@ -19,7 +20,6 @@ export const routes: Route[] = [
   {
       endpoint: '/apis/v1/users',
       handler: userHandler,
-      
       method: RouteMethod.GET,
   },
   {
@@ -36,5 +36,10 @@ export const routes: Route[] = [
       endpoint: '/apis/v1/users/:userId',
       handler: userHandler,
       method: RouteMethod.DELETE,
+  },
+  {
+      endpoint: '/apis/v1/login',
+      handler: authHandler,
+      method: RouteMethod.POST,
   },
 ];
