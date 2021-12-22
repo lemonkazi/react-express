@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 
 export default class UserDao extends BaseDao {
     protected repository: Repository<User>;
-    private saltRounds= 10;
+    private saltRounds= 6;
 
     constructor(manager: EntityManager) {
         super(manager);

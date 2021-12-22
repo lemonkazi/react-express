@@ -11,12 +11,12 @@
     "start": "node ./bin/www",
     "dev": "NODE_ENV=development PORT=3000 nodemon src/app.ts",
     "typeorm:cli": "ts-node -r tsconfig-paths/src ./node_modules/typeorm/cli.js -f ormconfig.json",
-    "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
-    "migration:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert",
-    "migration:create": "ts-node ./node_modules/typeorm/cli.js migration:create -n",
-    "seed:create": "ts-node ./node_modules/typeorm/cli.js -d ./src/seeds migration:create -c seed -n ",
-    "seed:run": "ts-node ./node_modules/typeorm/cli.js -d ./src/seeds migration:run -c seed",
-    "seed:revert": "ts-node ./node_modules/typeorm/cli.js -d ./src/seeds migration:revert -c seed"
+    "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run --config ormconfig.js",
+    "migration:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert --config ormconfig.js",
+    "migration:create": "ts-node ./node_modules/typeorm/cli.js migration:create --config ormconfig.js -n ",
+    "seed:run": "ts-node ./node_modules/.bin/typeorm migration:run --config ormconfig-seed.js",
+    "seed:create": "ts-node ./node_modules/.bin/typeorm -d ./src/seeds migration:create --config ormconfig-seed.js -c seed -n ",
+    "seed:revert": "ts-node ./node_modules/.bin/typeorm -d ./src/seeds migration:revert --config ormconfig-seed.js -c seed"
   },
   "dependencies": {
     "@types/aws-lambda": "^8.10.86",

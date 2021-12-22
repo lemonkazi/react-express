@@ -25,6 +25,7 @@ export enum UserRole {
 
 @Entity('users')
 export class User {
+    private saltRounds= 6;
     @PrimaryGeneratedColumn()
     public id?: number;
 
@@ -73,6 +74,10 @@ export class User {
   
     @BeforeInsert()
     async hashedPassword() {
-      this.password = await bcrypt.hash(this.password, 6);
+      this.password = await bcrypt.hash(this.password, this.saltRounds);
+    }
+
+    hashPassword() {
+      this.password = bcrypt.hashSync(this.password, this.saltRounds);
     }
 }
