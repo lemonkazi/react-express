@@ -81,4 +81,8 @@ export class User {
     hashPassword() {
       this.password = bcrypt.hashSync(this.password, saltRounds);
     }
+
+    checkIfPasswordMatch(unencryptedPassword: string) {
+      return bcrypt.compareSync(unencryptedPassword, this.password);
+    }
 }

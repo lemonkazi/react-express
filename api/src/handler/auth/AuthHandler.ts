@@ -75,7 +75,7 @@ export default class AuthHandler<AuthService> {
                 eventBody,
                 this.validationSchemeLogin!,
             ).validate();
-            const result = await this.service._post(body, this.emailUser);
+            const result = await this.service._login(body, this.emailUser);
             response = new Response.PostResponse(result, this.resourcePath).create();
         } catch (error:any) {
             return this.buildError(error);

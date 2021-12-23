@@ -24,28 +24,54 @@ export interface UserGetParams {
 
 export default class AuthService extends BaseService {
     
-    public async _post(requestBody: LoginPostBody, email: string): Promise<User> {
+    public async _login(requestBody: LoginPostBody, email: string): Promise<User> {
         return this.transaction(async (manager: EntityManager) => {
-            const userDao = new UserDao(manager);
-            const userExist = await userDao.findByEmail(requestBody.email);
-
+            //const userDao = new UserDao(manager);
             
-            if (userExist) {
-                return Promise.reject({ message: 'User already exist with this email' });
-                //return "User already exist with this email";
-            }
-            const user = await userDao.create({
-                email: requestBody.email,
-                password: requestBody.password
-            });
+            //const userRepository = new UserDao(manager);
+            const { email, password } = requestBody;
+            //const userRepository = getRepository(User);
 
-            // if (requestBody.assignees.length > 0) {
-            //     const assignees = await this.createAssignees(user.id, requestBody.assignees);
-            //     await assigneeDao.insertAssignees(assignees);
-            // }
-            if (user) {
-                return await userDao.findById(user.id);
-            }
+            try {
+
+              const userDao = new UserDao(manager);
+              const user = await userDao.findByEmail(email);
+
+              if (!user) {
+                return Promise.reject({ message: 'User not exist with this email' });
+              }
+
+              if (!user.checkIfPasswordMatch(password)) {
+                return Promise.reject({ message: 'Incorrect email or password' });
+                
+              }
+              return await userDao.findById(user.id);
+              // const jwtPayload: JwtPayload = {
+              //   id: user.id,
+              //   name: user.name,
+              //   email: user.email,
+              //   role: user.role as Role,
+              //   created_at: user.created_at,
+              // };
+
+              // try {
+              //   const token = createJwtToken(jwtPayload);
+              //   res.customSuccess(200, 'Token successfully created.', `Bearer ${token}`);
+              // } catch (err) {
+              //   const customError = new CustomError(400, 'Raw', "Token can't be created", null, err);
+              //   return next(customError);
+              // }
+          } catch (e) {
+            return Promise.reject({ message: 'Failed to login' });
+              // return Promise.reject({
+              //     message: `Couldnt connect to database: ${e} with params
+              // ${JSON.stringify({
+              //     port: dbConfig.port,
+              //     username: dbConfig.username,
+              //     database: dbConfig.database,
+              // })}`,
+              // });
+          }
         });
     }
 
