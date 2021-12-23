@@ -23,9 +23,10 @@ export enum UserRole {
     SUPER_ADMIN = 'superAdmin',
 }
 
+const saltRounds = 6;
+
 @Entity('users')
 export class User {
-    private saltRounds= 6;
     @PrimaryGeneratedColumn()
     public id?: number;
 
@@ -74,10 +75,14 @@ export class User {
   
     @BeforeInsert()
     async hashedPassword() {
-      this.password = await bcrypt.hash(this.password, this.saltRounds);
+      this.password = await bcrypt.hash(this.password, saltRounds);
     }
 
     hashPassword() {
-      this.password = bcrypt.hashSync(this.password, this.saltRounds);
+      this.password = bcrypt.hashSync(this.password, saltRounds);
+    }
+
+    checkIfPasswordMatch(unencryptedPassword: string) {
+      return bcrypt.compareSync(unencryptedPassword, this.password);
     }
 }
