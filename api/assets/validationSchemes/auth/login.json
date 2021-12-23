@@ -8,12 +8,6 @@
         "maxLength": 127,
         "description": "Email of the user"
       },
-      "username": {
-          "type": "string"
-      },
-      "role": {
-          "type": "string"
-      },
       "password": {
         "type": "string"
       }
