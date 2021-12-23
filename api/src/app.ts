@@ -143,6 +143,24 @@ const putRequest = (route: Route) => {
     });
 };
 
+
+const authRequest = (route: Route) => {
+    app.post(route.endpoint, async (req: any, res: any) => {
+        console.log('AUTH ', route.endpoint);
+        console.log('post body = ', event.body);
+        event.httpMethod = route.method;
+        context.action = route.action;
+        
+        event.headers = req.headers;
+        if (typeof req.body == 'object') {
+            event.body = JSON.stringify(req.body);
+        } else {
+            event.body = req.body;
+        }
+        const response: any = await route.handler(event, context);
+        res.send(response.body);
+    });
+};
 const deleteRequest = (route: Route) => {
     app.delete(route.endpoint, async (req: any, res: any) => {
         console.log('DELETE ', route.endpoint);
@@ -167,6 +185,9 @@ routes.forEach((route) => {
             break;
         case RouteMethod.DELETE:
             deleteRequest(route);
+            break;
+        case RouteMethod.AUTH:
+            authRequest(route);
             break;
         default:
             console.log('error, route method invalid');

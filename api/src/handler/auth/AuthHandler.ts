@@ -35,8 +35,21 @@ export default class AuthHandler<AuthService> {
 
     public async handler(): Promise<ApiResponse> {
         switch (this.event.httpMethod) {
-            case 'POST':
-                return await this._post();
+            case 'AUTH':
+                if (this.context.action && this.context.action !=null) {
+                    switch (this.context.action) {
+                        case 'login':
+                            return await this._login();
+                        default:
+                            return Promise.reject(
+                                new Response.GeneralErrorResponse(
+                                    501,
+                                    'Unsupported HTTP method(' + this.event.httpMethod + ')',
+                                    this.context.awsRequestId,
+                                ).create(),
+                            );
+                    }
+                }
             default:
                 return Promise.reject(
                     new Response.GeneralErrorResponse(
@@ -49,7 +62,7 @@ export default class AuthHandler<AuthService> {
     }
 
 
-    protected async _post(): Promise<ApiResponse> {
+    protected async _login(): Promise<ApiResponse> {
         let response;
         try {
             let eventBody;
