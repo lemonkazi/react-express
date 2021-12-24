@@ -1,11 +1,7 @@
-# React_Express_App_Medium_Tutorial
-- This repository has the code to support a tutorial that I created on Medium called Create a React FrontEnd, a Node/Express BackEnd and connect them together.
+# React_Express_App_exercise
+- This repository has the code with React FrontEnd, a Node/Express/typescript BackEnd and connect them together.
 - This repository can also be used as a starting point (boilerplate), if you whant to create your own React/Express app.
 .
-
-## Where can I check the tutorial?
-You are very welcome to check the tutorial on Medium. Just follow the link below.
-- [Create a React FrontEnd, a Node/Express BackEnd and connect them together](https://medium.com/@jrshenrique/create-a-react-frontend-a-node-express-backend-and-connect-them-together-c5798926047c)
 
 ## About the app
 Actually, there are two separated apps. The Client which serves the FrontEnd (using React), and the API (in Node/Express).
@@ -13,7 +9,30 @@ Actually, there are two separated apps. The Client which serves the FrontEnd (us
 ## How to run the API
 1. In your terminal, navigate to the `api` directory.
 2. Run `npm install` to install all dependencies.
-3. Run `npm start` to start the app.
+3. Run `npm dev` to start the app.
+4. Setup configuration:
+
+```sh
+cp .env.example .env
+```
+5. Create an MySQL database. You can also use another database (Postgres), simply update your configuration accordingly in `.env`.
+
+6. Run database migrations:
+
+```sh
+npm run migration:run
+```
+7. Run database seeder:
+
+```sh
+npm run seed:run
+```
+8. 
+You're ready to go! login with api: http://localhost:9000/apis/v1/login
+
+-   **Username:** admin@filamentadmin.com
+-   **Password:** password
+
 
 ## How to run the Client
 1. In another terminal, navigate to the `client` directory.

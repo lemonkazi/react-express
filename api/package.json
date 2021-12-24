@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "NODE_ENV=development PORT=3000 nodemon src/app.ts",
+    "dev": "NODE_ENV=development PORT=9000 nodemon src/app.ts",
     "typeorm:cli": "ts-node -r tsconfig-paths/src ./node_modules/typeorm/cli.js -f ormconfig.json",
     "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run --config ormconfig.js",
     "migration:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert --config ormconfig.js",
