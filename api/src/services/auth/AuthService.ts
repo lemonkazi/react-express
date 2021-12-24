@@ -4,7 +4,8 @@ import UserDao from '../../dao/user/UserDao';
 import { User, UserRole } from '../../entity/User';
 import BaseService from '../BaseService';
 import * as Response from '../../lib/response/response';
-import { JwtPayload } from '../../types/JwtPayload';
+//import { JwtPayload } from '../../types/JwtPayload';
+//import { createJwtToken } from 'utils/createJwtToken';
 
 
 interface LoginPostBody {
@@ -24,6 +25,14 @@ interface MyObj {
   data:object
 }
 
+interface JwtPayload {
+  id: number|undefined;
+  username: string|undefined;
+  email: string|undefined;
+  role: UserRole|undefined;
+  created_at: Date|undefined;
+}
+
 export interface UserGetParams {
     email: string;
 }
@@ -31,7 +40,7 @@ export interface UserGetParams {
 
 export default class AuthService extends BaseService {
     
-    public async _login(requestBody: LoginPostBody, email: string,MyObj:MyObj): Promise<any> {
+    public async _login(requestBody: LoginPostBody, email: string,MyObj:MyObj,JwtPayload:JwtPayload): Promise<any> {
         return this.transaction(async (manager: EntityManager) => {
             //const userDao = new UserDao(manager);
             
@@ -55,19 +64,21 @@ export default class AuthService extends BaseService {
 
              
 
-              const recipient: MyObj = { message: 'succeed',success: true,data:user };
-              return Promise.resolve(recipient);
               
 
               
               //return data = { message: 'succeed',success: true, body:user} ;
-              // const jwtPayload: JwtPayload = {
-              //   id: user.id,
-              //   name: user.name,
-              //   email: user.email,
-              //   role: user.role as Role,
-              //   created_at: user.created_at,
-              // };
+              const jwtPayload: JwtPayload = {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+                created_at: user.created_at,
+              };
+              const recipient: MyObj = { message: 'succeed',success: true,data:jwtPayload };
+              
+              
+              return Promise.resolve(recipient);
 
               // try {
               //   const token = createJwtToken(jwtPayload);
