@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.6",
     "@types/luxon": "^1.25.0",
     "@types/node": "^13.11.1",
     "@types/node-fetch": "^2.5.7",

@@ -143,7 +143,16 @@ const putRequest = (route: Route) => {
         res.send(response.body);
     });
 };
-
+const deleteRequest = (route: Route) => {
+    app.delete(route.endpoint, async (req: any, res: any) => {
+        console.log('DELETE ', route.endpoint);
+        event.httpMethod = route.method;
+        event.headers = req.headers;
+        event.pathParameters = req.params;
+        const response: any = await route.handler(event, context);
+        res.send(response.body);
+    });
+};
 
 const authRequest = (route: Route) => {
     app.post(route.endpoint, async (req: Request, res: Response, next: NextFunction) => {
@@ -159,7 +168,6 @@ const authRequest = (route: Route) => {
             event.body = req.body;
         }
         const response: any = await route.handler(event, context);
-        //var result=response.body;
         var result = JSON.parse(response.body);
         var message='';
         var success=true;
@@ -167,25 +175,14 @@ const authRequest = (route: Route) => {
             
             message = result.message;
             success = Boolean(result.success);
-            result = result.data;
+            delete result.success;
+            delete result.message;
+            result = result;
         } 
-        
         (res as any).customSuccess(response.statusCode, message, result,success);
-        
-        //return next(response.body);
-        //res.send(response.body);
     });
 };
-const deleteRequest = (route: Route) => {
-    app.delete(route.endpoint, async (req: any, res: any) => {
-        console.log('DELETE ', route.endpoint);
-        event.httpMethod = route.method;
-        event.headers = req.headers;
-        event.pathParameters = req.params;
-        const response: any = await route.handler(event, context);
-        res.send(response.body);
-    });
-};
+
 
 routes.forEach((route) => {
     switch (route.method) {

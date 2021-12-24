@@ -5,7 +5,7 @@ import { User, UserRole } from '../../entity/User';
 import BaseService from '../BaseService';
 import * as Response from '../../lib/response/response';
 //import { JwtPayload } from '../../types/JwtPayload';
-//import { createJwtToken } from 'utils/createJwtToken';
+import { createJwtToken } from '../../utils/createJwtToken';
 
 
 interface LoginPostBody {
@@ -32,6 +32,7 @@ interface JwtPayload {
   role: UserRole|undefined;
   created_at: Date|undefined;
 }
+
 
 export interface UserGetParams {
     email: string;
@@ -68,25 +69,43 @@ export default class AuthService extends BaseService {
 
               
               //return data = { message: 'succeed',success: true, body:user} ;
-              const jwtPayload: JwtPayload = {
-                id: user.id,
-                username: user.username,
-                email: user.email,
-                role: user.role,
-                created_at: user.created_at,
-              };
-              const recipient: MyObj = { message: 'succeed',success: true,data:jwtPayload };
               
               
-              return Promise.resolve(recipient);
 
-              // try {
-              //   const token = createJwtToken(jwtPayload);
-              //   res.customSuccess(200, 'Token successfully created.', `Bearer ${token}`);
-              // } catch (err) {
-              //   const customError = new CustomError(400, 'Raw', "Token can't be created", null, err);
-              //   return next(customError);
-              // }
+              try {
+                var jwtPayload: JwtPayload = {
+                  id: user.id,
+                  username: user.username,
+                  email: user.email,
+                  role: user.role,
+                  created_at: user.created_at,
+                };
+
+                //'expired' => date('Y-m-d',$expired),
+                //'user' => $userArr,
+                var currentDate = new Date();
+                //var min = { minute: process.env.JWT_EXPIRATION_MINUTE };
+                //var expired = new Date(currentDate.getTime() + (Number(min.minute) * 60 * 1000));
+                
+                var duration = process.env.JWT_EXPIRATION_DAY; //In Days
+                var expired = new Date(currentDate.getTime() +  (Number(duration) * 24 * 60 * 60 * 1000));
+                
+                
+                const token = createJwtToken(jwtPayload);
+
+                //`Bearer ${token}`
+                //console.log(expired)
+                const recipient = { message: 'Token successfully created.',success: true,user:user,type:'Bearer',token:token,expired:expired };
+              
+              
+                 return Promise.resolve(recipient);
+                //res.customSuccess(200, 'Token successfully created.', `Bearer ${token}`);
+              } catch (err) {
+                console.log(err);
+                return Promise.reject({ message: 'Failed to login',success: false });
+                // const customError = new CustomError(400, 'Raw', "Token can't be created", null, err);
+                // return next(customError);
+              }
           } catch (e) {
             console.log(e);
             return Promise.reject({ message: 'Failed to login',success: false });
