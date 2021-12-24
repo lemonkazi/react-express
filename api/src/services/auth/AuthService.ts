@@ -17,6 +17,12 @@ interface UserPutBody {
     password: string;
 }
 
+interface MyObj {
+  message: string,
+  success: Boolean,
+  data:object
+}
+
 export interface UserGetParams {
     email: string;
 }
@@ -24,7 +30,7 @@ export interface UserGetParams {
 
 export default class AuthService extends BaseService {
     
-    public async _login(requestBody: LoginPostBody, email: string): Promise<User> {
+    public async _login(requestBody: LoginPostBody, email: string,MyObj:MyObj): Promise<any> {
         return this.transaction(async (manager: EntityManager) => {
             //const userDao = new UserDao(manager);
             
@@ -38,14 +44,22 @@ export default class AuthService extends BaseService {
               const user = await userDao.findByEmail(email);
 
               if (!user) {
-                return Promise.reject({ message: 'User not exist with this email' });
+                return Promise.reject({ message: 'User not exist with this email',success: false });
               }
 
               if (!user.checkIfPasswordMatch(password)) {
-                return Promise.reject({ message: 'Incorrect email or password' });
+                return Promise.reject({ message: 'Incorrect email or password',success: false });
                 
               }
-              return await userDao.findById(user.id);
+
+             
+
+              const recipient: MyObj = { message: 'succeed',success: true,data:user };
+              return Promise.resolve(recipient);
+              
+
+              
+              //return data = { message: 'succeed',success: true, body:user} ;
               // const jwtPayload: JwtPayload = {
               //   id: user.id,
               //   name: user.name,
@@ -62,7 +76,7 @@ export default class AuthService extends BaseService {
               //   return next(customError);
               // }
           } catch (e) {
-            return Promise.reject({ message: 'Failed to login' });
+            return Promise.reject({ message: 'Failed to login',success: false });
               // return Promise.reject({
               //     message: `Couldnt connect to database: ${e} with params
               // ${JSON.stringify({
