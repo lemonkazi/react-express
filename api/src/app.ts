@@ -11,7 +11,6 @@ var express = require("express");
 //var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
-//const bodyParser = require('body-parser');
 
 
 
@@ -24,28 +23,9 @@ const context: any = {
 
 
 let PORT = process.env.PORT || 9000;
-// app.listen(PORT, () => {
-//   console.log(`Server is up and running on ${PORT} ...`);
-// });
-
-
-
-
-// view engine setup
-// app.set("views", path.join(__dirname, "views"));
-// app.set("view engine", "jade");
 
 app.use(cors());
-// function defaultContentTypeMiddleware (req:any, res:any, next:any) {
-//     console.log('ddddddds');
-//     console.log(req.body);
-//     //req.headers['content-type'] = req.headers['content-type'] || 'application/json';
-//     //next();
-//   }
-  
-// app.use(defaultContentTypeMiddleware);
-//app.use(express.json());
-//app.use(bodyParser.urlencoded({ extended: true }));
+
 
 app.use(logger("dev"));
 

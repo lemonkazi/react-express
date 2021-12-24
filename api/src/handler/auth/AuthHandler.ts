@@ -30,7 +30,7 @@ export default class AuthHandler<AuthService> {
         this.emailUser = this.event.requestContext?.authorizer?.claims.email;
 
         logger.log(LogLevel.log, JSON.stringify(this.context));
-        logger.log(LogLevel.log, JSON.stringify(this.event));
+        //logger.log(LogLevel.log, JSON.stringify(this.event));
     }
 
     public async handler(): Promise<ApiResponse> {

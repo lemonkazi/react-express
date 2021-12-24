@@ -5,6 +5,19 @@ export enum LogLevel {
   error,
 }
 
+
+var fs = require('fs');
+var util = require('util');
+var log_file = fs.createWriteStream(__dirname + '/debug.log', {flags : 'a'});
+var error_log_file = fs.createWriteStream(__dirname + '/error.log', {flags : 'a'});
+var log_stdout = process.stdout;
+
+// console.log = function(d) { //
+//   log_file.write(util.format(d) + '\n');
+//   log_stdout.write(util.format(d) + '\n');
+// };
+
+
 export class Logger {
   private minLogLevel: LogLevel = LogLevel.info;
 
@@ -16,15 +29,21 @@ export class Logger {
 
       switch (level) {
           case LogLevel.info:
-              console.info(str);
+              log_file.write(util.format(str) + '\n');
+              //console.info(str);
               break;
           case LogLevel.log:
-              console.log(str);
+                log_file.write(util.format(str) + '\n');
+                //log_stdout.write(util.format(str) + '\n');
+              //console.log(str);
               break;
           case LogLevel.warning:
+              log_file.write(util.format(str) + '\n');
               console.warn(str);
               break;
           case LogLevel.error:
+                error_log_file.write(util.format(str) + '\n');
+                //log_stdout.write(util.format(str) + '\n');
               console.error(str);
               break;
           default:
