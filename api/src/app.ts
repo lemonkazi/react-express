@@ -1,6 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, response, Response, NextFunction } from 'express';
 import { ErrorRequestHandler } from 'express';
 import { Route, RouteMethod, routes } from './routes';
+import './utils/response/customSuccess';
 //import event from '../utility/testing-setup/utils/testEvent';
 import "reflect-metadata";
 
@@ -145,7 +146,7 @@ const putRequest = (route: Route) => {
 
 
 const authRequest = (route: Route) => {
-    app.post(route.endpoint, async (req: any, res: any) => {
+    app.post(route.endpoint, async (req: Request, res: Response, next: NextFunction) => {
         console.log('AUTH ', route.endpoint);
         console.log('post body = ', event.body);
         event.httpMethod = route.method;
@@ -158,7 +159,21 @@ const authRequest = (route: Route) => {
             event.body = req.body;
         }
         const response: any = await route.handler(event, context);
-        res.send(response.body);
+        //var result=response.body;
+        var result = JSON.parse(response.body);
+        var message='';
+        var success=true;
+        if (result.constructor.name == "Array" || result.constructor.name == "Object") {
+            
+            message = result.message;
+            success = Boolean(result.success);
+            result = result.data;
+        } 
+        
+        (res as any).customSuccess(response.statusCode, message, result,success);
+        
+        //return next(response.body);
+        //res.send(response.body);
     });
 };
 const deleteRequest = (route: Route) => {
