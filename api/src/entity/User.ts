@@ -6,7 +6,9 @@ import {
     JoinColumn, 
     ManyToOne, 
     OneToMany, 
-    PrimaryGeneratedColumn
+    PrimaryGeneratedColumn, 
+    CreateDateColumn, 
+    UpdateDateColumn
   } from "typeorm";
 
 
@@ -69,6 +71,15 @@ export class User {
     @Length(6, 200)
     @Column()
     public password?: string;
+
+
+    @Column()
+    @CreateDateColumn()
+    public created_at?: Date;
+
+    @Column()
+    @UpdateDateColumn()
+    public modified_at?: Date;
   
     // @OneToMany(() => Post, post => post.user)
     // posts: Post[];

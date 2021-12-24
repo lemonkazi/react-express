@@ -4,6 +4,7 @@ import UserDao from '../../dao/user/UserDao';
 import { User, UserRole } from '../../entity/User';
 import BaseService from '../BaseService';
 import * as Response from '../../lib/response/response';
+import { JwtPayload } from '../../types/JwtPayload';
 
 
 interface LoginPostBody {
@@ -76,6 +77,7 @@ export default class AuthService extends BaseService {
               //   return next(customError);
               // }
           } catch (e) {
+            console.log(e);
             return Promise.reject({ message: 'Failed to login',success: false });
               // return Promise.reject({
               //     message: `Couldnt connect to database: ${e} with params
