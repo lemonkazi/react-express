@@ -33,7 +33,7 @@ app.use(logger("dev"));
 const multer = require('multer');
 
 /** Decode Form URL Encoded data */
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: true}));
 
 /** Decode JSON data */
 app.use(express.json());
