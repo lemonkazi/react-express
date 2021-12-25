@@ -11,7 +11,6 @@ var express = require("express");
 //var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
-//const bodyParser = require('body-parser');
 
 
 
@@ -24,28 +23,9 @@ const context: any = {
 
 
 let PORT = process.env.PORT || 9000;
-// app.listen(PORT, () => {
-//   console.log(`Server is up and running on ${PORT} ...`);
-// });
-
-
-
-
-// view engine setup
-// app.set("views", path.join(__dirname, "views"));
-// app.set("view engine", "jade");
 
 app.use(cors());
-// function defaultContentTypeMiddleware (req:any, res:any, next:any) {
-//     console.log('ddddddds');
-//     console.log(req.body);
-//     //req.headers['content-type'] = req.headers['content-type'] || 'application/json';
-//     //next();
-//   }
-  
-// app.use(defaultContentTypeMiddleware);
-//app.use(express.json());
-//app.use(bodyParser.urlencoded({ extended: true }));
+
 
 app.use(logger("dev"));
 
@@ -53,7 +33,7 @@ app.use(logger("dev"));
 const multer = require('multer');
 
 /** Decode Form URL Encoded data */
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: true}));
 
 /** Decode JSON data */
 app.use(express.json());
@@ -143,7 +123,16 @@ const putRequest = (route: Route) => {
         res.send(response.body);
     });
 };
-
+const deleteRequest = (route: Route) => {
+    app.delete(route.endpoint, async (req: any, res: any) => {
+        console.log('DELETE ', route.endpoint);
+        event.httpMethod = route.method;
+        event.headers = req.headers;
+        event.pathParameters = req.params;
+        const response: any = await route.handler(event, context);
+        res.send(response.body);
+    });
+};
 
 const authRequest = (route: Route) => {
     app.post(route.endpoint, async (req: Request, res: Response, next: NextFunction) => {
@@ -159,7 +148,6 @@ const authRequest = (route: Route) => {
             event.body = req.body;
         }
         const response: any = await route.handler(event, context);
-        //var result=response.body;
         var result = JSON.parse(response.body);
         var message='';
         var success=true;
@@ -167,25 +155,14 @@ const authRequest = (route: Route) => {
             
             message = result.message;
             success = Boolean(result.success);
-            result = result.data;
+            delete result.success;
+            delete result.message;
+            result = result;
         } 
-        
         (res as any).customSuccess(response.statusCode, message, result,success);
-        
-        //return next(response.body);
-        //res.send(response.body);
     });
 };
-const deleteRequest = (route: Route) => {
-    app.delete(route.endpoint, async (req: any, res: any) => {
-        console.log('DELETE ', route.endpoint);
-        event.httpMethod = route.method;
-        event.headers = req.headers;
-        event.pathParameters = req.params;
-        const response: any = await route.handler(event, context);
-        res.send(response.body);
-    });
-};
+
 
 routes.forEach((route) => {
     switch (route.method) {

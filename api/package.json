@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "NODE_ENV=development PORT=3000 nodemon src/app.ts",
+    "dev": "NODE_ENV=development PORT=9000 nodemon src/app.ts",
     "typeorm:cli": "ts-node -r tsconfig-paths/src ./node_modules/typeorm/cli.js -f ormconfig.json",
     "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run --config ormconfig.js",
     "migration:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert --config ormconfig.js",
@@ -30,7 +30,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "http-errors": "~1.6.2",
-    "jade": "~1.11.0",
+    "jade": "^0.31.2",
     "jsonwebtoken": "^8.5.1",
     "luxon": "^1.28.0",
     "morgan": "~1.9.0",
@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.6",
     "@types/luxon": "^1.25.0",
     "@types/node": "^13.11.1",
     "@types/node-fetch": "^2.5.7",

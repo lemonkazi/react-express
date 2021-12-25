@@ -42,8 +42,8 @@ export class GeneralErrorResponse extends BaseResponse {
         super(statusCode, BaseResponse.createCorsHeader(), {
             message: errorMessage,
         });
-        const logger = new Logger();
-        logger.log(LogLevel.error, errorMessage);
+        //const logger = new Logger();
+        //logger.log(LogLevel.error, errorMessage);
     }
 }
 
@@ -59,7 +59,7 @@ export class PostResponse extends BaseResponse {
     }
 
     constructor(bodyObject: object, resourcePath: string) {
-        super(201, PostResponse.createHeader(resourcePath), bodyObject);
+        super(200, PostResponse.createHeader(resourcePath), bodyObject);
     }
 }
 

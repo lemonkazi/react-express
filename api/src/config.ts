@@ -10,7 +10,7 @@ interface DbConfig {
     nodeEnv: string;
     userPoolId: string;
 }
-console.log('env variables = ', process.env);
+//console.log('env variables = ', process.env);
 
 const dbConfig: DbConfig = {
     host: process.env.DB_HOST!,
