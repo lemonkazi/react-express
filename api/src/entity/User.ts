@@ -19,11 +19,12 @@ const bcrypt = require('bcrypt');
 // import { Assignee } from './Assignee';
 // import { Organization } from './Organization';
 
-export enum UserRole {
-    USER = 'user',
-    ADMIN = 'admin',
-    SUPER_ADMIN = 'superAdmin',
-}
+// export enum UserRole {
+//     USER = 'user',
+//     ADMIN = 'admin',
+//     SUPER_ADMIN = 'superAdmin',
+// }
+export type UserRole = 'ADMINISTRATOR' | 'STANDARD';
 
 const saltRounds = 6;
 

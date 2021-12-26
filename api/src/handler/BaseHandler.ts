@@ -1,10 +1,15 @@
 import { APIGatewayEvent } from 'aws-lambda';
-import { ObjectLiteral } from 'typeorm';
+import { Any, ObjectLiteral } from 'typeorm';
 import Request from '../lib/request/request';
 import * as Response from '../lib/response/response';
 import { ApiResponse } from '../lib/response/response';
 import { ResourceNotFoundError, UnauthorizedError } from '../lib/utils/customErrors';
+import { CustomError } from '../utils/response/custom-error/CustomError';
 import { Logger, LogLevel } from '../logger';
+import {NextFunction } from 'express';
+
+import { checkJwt } from '../middleware/checkJwt';
+import { checkUserRole } from '../middleware/checkRole';
 
 // postgres returns number type as string, so change it to return floats.
 // const types = require('pg').types;
@@ -13,6 +18,7 @@ import { Logger, LogLevel } from '../logger';
 // });
 
 const logger = new Logger();
+//const checkjwt = new checkJwt();
 
 export default abstract class BaseHandlerRDS<Service> {
     protected validationSchemeGet: string | null;
@@ -27,6 +33,8 @@ export default abstract class BaseHandlerRDS<Service> {
     protected service: any;
     protected resourcePath: string;
     protected emailUser: string = '';
+    protected checkAuth?: boolean;
+    protected checkRole?: boolean;
 
     constructor(
         validationSchemeGet: string | null,
@@ -51,9 +59,11 @@ export default abstract class BaseHandlerRDS<Service> {
         this.context = context;
         this.service = service;
         this.resourcePath = event.resource;
-        logger.log(LogLevel.log, JSON.stringify(this.context));
-        logger.log(LogLevel.log, JSON.stringify(this.event));
+        //logger.log(LogLevel.log, JSON.stringify(this.context));
+        
         this.emailUser = this.event.requestContext?.authorizer?.claims.email;
+        this.checkAuth = event.requestContext?.authorizer?.checkAuth?.checkAuth;
+        this.checkRole = event.requestContext?.authorizer?.checkRole?.checkRole;
     }
 
     public async handler(): Promise<ApiResponse> {
@@ -86,7 +96,31 @@ export default abstract class BaseHandlerRDS<Service> {
         const eventQueryParams = this.event.queryStringParameters
             ? this.event.queryStringParameters
             : {};
+        //this.checkAuth,this.checkRole
+        if (this.checkAuth) {
+            logger.log(LogLevel.log, JSON.stringify(this.event.headers.authorization));
+            //const response: any  = checkJwt.checkJwt();
+            //if (this.event.headers.authorization) {
+                const token = checkJwt(this.event.headers);
+            //}
 
+            
+            if (token && token.errorType) {
+                //response = new CustomError(token.httpStatusCode, token.errorType, token.message);
+                //return response;
+                return this.buildError(token);
+
+                // return new Response.GeneralErrorResponse(
+                //     token.httpStatusCode,
+                //     token.message,
+                //     this.context.awsRequestId,
+                // ).create();
+                // //return token.CustomError;
+                
+            }
+            
+            //const token = checkJwt(this.event);
+        }
         const queryParams: ObjectLiteral = new Request(
             eventQueryParams,
             this.validationSchemeGet!,

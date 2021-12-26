@@ -24,6 +24,7 @@
   "dependencies": {
     "@types/aws-lambda": "^8.10.86",
     "ajv": "^8.8.2",
+    "aws-event-mocks": "^0.0.0",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",

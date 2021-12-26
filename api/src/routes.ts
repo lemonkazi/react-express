@@ -16,6 +16,8 @@ export interface Route {
   handler: (event: any, context: any) => void;
   method: RouteMethod;
   action: string | null;
+  checkRole?: boolean;
+  checkAuth?: boolean;
 }
 
 export const routes: Route[] = [
@@ -23,7 +25,9 @@ export const routes: Route[] = [
       endpoint: '/apis/v1/users',
       handler: userHandler,
       method: RouteMethod.GET,
-      action: null
+      action: null,
+      checkRole: true,
+      checkAuth: true
   },
   {
       endpoint: '/apis/v1/users',
