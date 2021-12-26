@@ -136,6 +136,8 @@ const postRequest = (route: Route) => {
         console.log('post body = ', event.body);
         event.httpMethod = route.method;
         event.headers = req.headers;
+        event.requestContext.authorizer.checkAuth.checkAuth = route.checkAuth;
+        event.requestContext.authorizer.checkAuth.checkRole = route.checkRole;
         if (typeof req.body == 'object') {
             event.body = JSON.stringify(req.body);
         } else {
@@ -156,6 +158,8 @@ const putRequest = (route: Route) => {
         event.pathParameters = req.params;
         const body = req.body;
         event.body = body;
+        event.requestContext.authorizer.checkAuth.checkAuth = route.checkAuth;
+        event.requestContext.authorizer.checkAuth.checkRole = route.checkRole;
         const response: any = await route.handler(event, context);
         res.send(response.body);
     });
@@ -166,6 +170,8 @@ const deleteRequest = (route: Route) => {
         event.httpMethod = route.method;
         event.headers = req.headers;
         event.pathParameters = req.params;
+        event.requestContext.authorizer.checkAuth.checkAuth = route.checkAuth;
+        event.requestContext.authorizer.checkAuth.checkRole = route.checkRole;
         const response: any = await route.handler(event, context);
         res.send(response.body);
     });

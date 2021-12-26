@@ -98,28 +98,14 @@ export default abstract class BaseHandlerRDS<Service> {
             : {};
         //this.checkAuth,this.checkRole
         if (this.checkAuth) {
-            logger.log(LogLevel.log, JSON.stringify(this.event.headers.authorization));
-            //const response: any  = checkJwt.checkJwt();
-            //if (this.event.headers.authorization) {
-                const token = checkJwt(this.event.headers);
-            //}
-
+            //logger.log(LogLevel.log, JSON.stringify(this.event.headers.authorization));
             
+            const token = checkJwt(this.event.headers);
             if (token && token.errorType) {
-                //response = new CustomError(token.httpStatusCode, token.errorType, token.message);
-                //return response;
+                
                 return this.buildError(token);
-
-                // return new Response.GeneralErrorResponse(
-                //     token.httpStatusCode,
-                //     token.message,
-                //     this.context.awsRequestId,
-                // ).create();
-                // //return token.CustomError;
                 
             }
-            
-            //const token = checkJwt(this.event);
         }
         const queryParams: ObjectLiteral = new Request(
             eventQueryParams,
@@ -145,6 +131,16 @@ export default abstract class BaseHandlerRDS<Service> {
 
     protected async _post(): Promise<ApiResponse> {
         let response;
+        if (this.checkAuth) {
+            //logger.log(LogLevel.log, JSON.stringify(this.event.headers.authorization));
+            
+            const token = checkJwt(this.event.headers);
+            if (token && token.errorType) {
+                
+                return this.buildError(token);
+                
+            }
+        }
         try {
             let eventBody;
             if (typeof this.event.body === 'object') {
@@ -167,6 +163,16 @@ export default abstract class BaseHandlerRDS<Service> {
 
     protected async _put(): Promise<ApiResponse> {
         let response;
+        if (this.checkAuth) {
+            //logger.log(LogLevel.log, JSON.stringify(this.event.headers.authorization));
+            
+            const token = checkJwt(this.event.headers);
+            if (token && token.errorType) {
+                
+                return this.buildError(token);
+                
+            }
+        }
         try {
             let eventBody;
             if (typeof this.event.body === 'object') {
@@ -190,6 +196,16 @@ export default abstract class BaseHandlerRDS<Service> {
 
     protected async _delete(): Promise<ApiResponse> {
         let response;
+        if (this.checkAuth) {
+            //logger.log(LogLevel.log, JSON.stringify(this.event.headers.authorization));
+            
+            const token = checkJwt(this.event.headers);
+            if (token && token.errorType) {
+                
+                return this.buildError(token);
+                
+            }
+        }
 
         try {
             const pathParameters = this.event.pathParameters!;
