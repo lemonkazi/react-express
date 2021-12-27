@@ -16,7 +16,13 @@ import { checkUserRole } from '../middleware/checkRole';
 // types.setTypeParser(1700, function (val: any) {
 //     return parseFloat(val);
 // });
-
+interface Error {
+    httpStatusCode: number;
+    errorType?: string;
+    message: string;
+    stack?: string;
+    errors?: any;
+}
 const logger = new Logger();
 //const checkjwt = new checkJwt();
 
@@ -35,6 +41,8 @@ export default abstract class BaseHandlerRDS<Service> {
     protected emailUser: string = '';
     protected checkAuth?: boolean;
     protected checkRole?: boolean;
+
+    protected RoleType: any;
 
     constructor(
         validationSchemeGet: string | null,
@@ -106,6 +114,17 @@ export default abstract class BaseHandlerRDS<Service> {
                 return this.buildError(token);
                 
             }
+            
+
+            if (this.checkRole) {
+                this.RoleType=["ADMINISTRATOR"];
+                const role = checkUserRole(this.RoleType, true,this.event,token);
+                if (role && role.errorType) {
+                
+                    return this.buildError(role);
+                    
+                }
+            }
         }
         const queryParams: ObjectLiteral = new Request(
             eventQueryParams,
@@ -140,6 +159,16 @@ export default abstract class BaseHandlerRDS<Service> {
                 return this.buildError(token);
                 
             }
+
+            if (this.checkRole) {
+                this.RoleType=["ADMINISTRATOR"];
+                const role = checkUserRole(this.RoleType, true,this.event,token);
+                if (role && role.errorType) {
+                
+                    return this.buildError(role);
+                    
+                }
+            }
         }
         try {
             let eventBody;
@@ -171,6 +200,15 @@ export default abstract class BaseHandlerRDS<Service> {
                 
                 return this.buildError(token);
                 
+            }
+            if (this.checkRole) {
+                this.RoleType=["ADMINISTRATOR"];
+                const role = checkUserRole(this.RoleType, true,this.event,token);
+                if (role && role.errorType) {
+                
+                    return this.buildError(role);
+                    
+                }
             }
         }
         try {
@@ -205,6 +243,15 @@ export default abstract class BaseHandlerRDS<Service> {
                 return this.buildError(token);
                 
             }
+            if (this.checkRole) {
+                this.RoleType=["ADMINISTRATOR"];
+                const role = checkUserRole(this.RoleType, true,this.event,token);
+                if (role && role.errorType) {
+                
+                    return this.buildError(role);
+                    
+                }
+            }
         }
 
         try {
@@ -234,6 +281,7 @@ export default abstract class BaseHandlerRDS<Service> {
                 this.context.awsRequestId,
             ).create();
         } else if (e instanceof UnauthorizedError) {
+            //return new CustomError(401, e.errorType, e.message, e.errors);
             return new Response.GeneralErrorResponse(
                 401,
                 e.message,

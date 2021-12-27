@@ -120,7 +120,7 @@ const getRequest = (route: Route) => {
         event.queryStringParameters = req.query;
         event.headers = req.headers; 
         event.requestContext.authorizer.checkAuth.checkAuth = route.checkAuth;
-        event.requestContext.authorizer.checkAuth.checkRole = route.checkRole;
+        event.requestContext.authorizer.checkRole.checkRole = route.checkRole;
         //context.request = req;
         //context.response = res;
         // event.checkRole = route.checkRole;
@@ -171,7 +171,7 @@ const deleteRequest = (route: Route) => {
         event.headers = req.headers;
         event.pathParameters = req.params;
         event.requestContext.authorizer.checkAuth.checkAuth = route.checkAuth;
-        event.requestContext.authorizer.checkAuth.checkRole = route.checkRole;
+        event.requestContext.authorizer.checkRole.checkRole = route.checkRole;
         const response: any = await route.handler(event, context);
         res.send(response.body);
     });
