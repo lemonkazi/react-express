@@ -1,21 +1,51 @@
-import { Request, response, Response, NextFunction } from 'express';
-import { ErrorRequestHandler } from 'express';
+import { Request, response, Response, NextFunction,ErrorRequestHandler } from 'express';
+
 import { Route, RouteMethod, routes } from './routes';
+import { Logger, LogLevel } from './logger';
+
 import './utils/response/customSuccess';
 //import event from '../utility/testing-setup/utils/testEvent';
 import "reflect-metadata";
 
-//var createError = require("http-errors");
 var express = require("express");
-//var path = require("path");
-//var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+//var logger = require("morgan");
+var logger = new Logger();
 var cors = require("cors");
 
 
 
 var app = express();
-var event = require('events');
+//var event = require('events');
+
+// @ts-ignore
+const createEvent = require('aws-event-mocks');
+
+const event = createEvent({
+    template: 'aws:apiGateway',
+    merge: {
+        body: {},
+    },
+    pathParameters: {},
+});
+event.requestContext = {
+    authorizer: {
+        claims: {
+            email: 'admin@test.jp',
+        },
+        checkRole:{
+    
+            checkRole: false,
+            
+        },
+        checkAuth : {
+        
+            checkAuth: false,
+            
+        }
+    }
+};
+
+
 const context: any = {
     awsRequestId: 0,
 };
@@ -27,7 +57,7 @@ let PORT = process.env.PORT || 9000;
 app.use(cors());
 
 
-app.use(logger("dev"));
+//app.use(logger("dev"));
 
 /** Require multer */
 const multer = require('multer');
@@ -80,14 +110,21 @@ app.use(function(err, req: Request, res: Response, next: NextFunction) {
 
 
 const getRequest = (route: Route) => {
-    app.get(route.endpoint, async (req: any, res: any) => {
+    
+    app.get(route.endpoint, async (req: Request, res: Response, next: NextFunction) => {
         console.log('GET ', req.path);
         console.log('Query params =  ', req.query);
         console.log('Path params =  ', req.params);
         event.httpMethod = route.method;
         event.pathParameters = req.params;
         event.queryStringParameters = req.query;
-        event.headers = req.headers;
+        event.headers = req.headers; 
+        event.requestContext.authorizer.checkAuth.checkAuth = route.checkAuth;
+        event.requestContext.authorizer.checkRole.checkRole = route.checkRole;
+        //context.request = req;
+        //context.response = res;
+        // event.checkRole = route.checkRole;
+        // event.checkAuth = route.checkAuth;
         const response: any = await route.handler(event, context);
         res.send(response.body);
     });
@@ -99,6 +136,8 @@ const postRequest = (route: Route) => {
         console.log('post body = ', event.body);
         event.httpMethod = route.method;
         event.headers = req.headers;
+        event.requestContext.authorizer.checkAuth.checkAuth = route.checkAuth;
+        event.requestContext.authorizer.checkAuth.checkRole = route.checkRole;
         if (typeof req.body == 'object') {
             event.body = JSON.stringify(req.body);
         } else {
@@ -119,6 +158,8 @@ const putRequest = (route: Route) => {
         event.pathParameters = req.params;
         const body = req.body;
         event.body = body;
+        event.requestContext.authorizer.checkAuth.checkAuth = route.checkAuth;
+        event.requestContext.authorizer.checkAuth.checkRole = route.checkRole;
         const response: any = await route.handler(event, context);
         res.send(response.body);
     });
@@ -129,6 +170,8 @@ const deleteRequest = (route: Route) => {
         event.httpMethod = route.method;
         event.headers = req.headers;
         event.pathParameters = req.params;
+        event.requestContext.authorizer.checkAuth.checkAuth = route.checkAuth;
+        event.requestContext.authorizer.checkRole.checkRole = route.checkRole;
         const response: any = await route.handler(event, context);
         res.send(response.body);
     });

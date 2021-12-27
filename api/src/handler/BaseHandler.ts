@@ -1,18 +1,30 @@
 import { APIGatewayEvent } from 'aws-lambda';
-import { ObjectLiteral } from 'typeorm';
+import { Any, ObjectLiteral } from 'typeorm';
 import Request from '../lib/request/request';
 import * as Response from '../lib/response/response';
 import { ApiResponse } from '../lib/response/response';
 import { ResourceNotFoundError, UnauthorizedError } from '../lib/utils/customErrors';
+import { CustomError } from '../utils/response/custom-error/CustomError';
 import { Logger, LogLevel } from '../logger';
+import {NextFunction } from 'express';
+
+import { checkJwt } from '../middleware/checkJwt';
+import { checkUserRole } from '../middleware/checkRole';
 
 // postgres returns number type as string, so change it to return floats.
 // const types = require('pg').types;
 // types.setTypeParser(1700, function (val: any) {
 //     return parseFloat(val);
 // });
-
+interface Error {
+    httpStatusCode: number;
+    errorType?: string;
+    message: string;
+    stack?: string;
+    errors?: any;
+}
 const logger = new Logger();
+//const checkjwt = new checkJwt();
 
 export default abstract class BaseHandlerRDS<Service> {
     protected validationSchemeGet: string | null;
@@ -27,6 +39,10 @@ export default abstract class BaseHandlerRDS<Service> {
     protected service: any;
     protected resourcePath: string;
     protected emailUser: string = '';
+    protected checkAuth?: boolean;
+    protected checkRole?: boolean;
+
+    protected RoleType: any;
 
     constructor(
         validationSchemeGet: string | null,
@@ -51,9 +67,11 @@ export default abstract class BaseHandlerRDS<Service> {
         this.context = context;
         this.service = service;
         this.resourcePath = event.resource;
-        logger.log(LogLevel.log, JSON.stringify(this.context));
-        logger.log(LogLevel.log, JSON.stringify(this.event));
+        //logger.log(LogLevel.log, JSON.stringify(this.context));
+        
         this.emailUser = this.event.requestContext?.authorizer?.claims.email;
+        this.checkAuth = event.requestContext?.authorizer?.checkAuth?.checkAuth;
+        this.checkRole = event.requestContext?.authorizer?.checkRole?.checkRole;
     }
 
     public async handler(): Promise<ApiResponse> {
@@ -86,7 +104,28 @@ export default abstract class BaseHandlerRDS<Service> {
         const eventQueryParams = this.event.queryStringParameters
             ? this.event.queryStringParameters
             : {};
+        //this.checkAuth,this.checkRole
+        if (this.checkAuth) {
+            //logger.log(LogLevel.log, JSON.stringify(this.event.headers.authorization));
+            
+            const token = checkJwt(this.event.headers);
+            if (token && token.errorType) {
+                
+                return this.buildError(token);
+                
+            }
+            
 
+            if (this.checkRole) {
+                this.RoleType=["ADMINISTRATOR"];
+                const role = checkUserRole(this.RoleType, true,this.event,token);
+                if (role && role.errorType) {
+                
+                    return this.buildError(role);
+                    
+                }
+            }
+        }
         const queryParams: ObjectLiteral = new Request(
             eventQueryParams,
             this.validationSchemeGet!,
@@ -111,6 +150,26 @@ export default abstract class BaseHandlerRDS<Service> {
 
     protected async _post(): Promise<ApiResponse> {
         let response;
+        if (this.checkAuth) {
+            //logger.log(LogLevel.log, JSON.stringify(this.event.headers.authorization));
+            
+            const token = checkJwt(this.event.headers);
+            if (token && token.errorType) {
+                
+                return this.buildError(token);
+                
+            }
+
+            if (this.checkRole) {
+                this.RoleType=["ADMINISTRATOR"];
+                const role = checkUserRole(this.RoleType, true,this.event,token);
+                if (role && role.errorType) {
+                
+                    return this.buildError(role);
+                    
+                }
+            }
+        }
         try {
             let eventBody;
             if (typeof this.event.body === 'object') {
@@ -133,6 +192,25 @@ export default abstract class BaseHandlerRDS<Service> {
 
     protected async _put(): Promise<ApiResponse> {
         let response;
+        if (this.checkAuth) {
+            //logger.log(LogLevel.log, JSON.stringify(this.event.headers.authorization));
+            
+            const token = checkJwt(this.event.headers);
+            if (token && token.errorType) {
+                
+                return this.buildError(token);
+                
+            }
+            if (this.checkRole) {
+                this.RoleType=["ADMINISTRATOR"];
+                const role = checkUserRole(this.RoleType, true,this.event,token);
+                if (role && role.errorType) {
+                
+                    return this.buildError(role);
+                    
+                }
+            }
+        }
         try {
             let eventBody;
             if (typeof this.event.body === 'object') {
@@ -156,6 +234,25 @@ export default abstract class BaseHandlerRDS<Service> {
 
     protected async _delete(): Promise<ApiResponse> {
         let response;
+        if (this.checkAuth) {
+            //logger.log(LogLevel.log, JSON.stringify(this.event.headers.authorization));
+            
+            const token = checkJwt(this.event.headers);
+            if (token && token.errorType) {
+                
+                return this.buildError(token);
+                
+            }
+            if (this.checkRole) {
+                this.RoleType=["ADMINISTRATOR"];
+                const role = checkUserRole(this.RoleType, true,this.event,token);
+                if (role && role.errorType) {
+                
+                    return this.buildError(role);
+                    
+                }
+            }
+        }
 
         try {
             const pathParameters = this.event.pathParameters!;
@@ -184,6 +281,7 @@ export default abstract class BaseHandlerRDS<Service> {
                 this.context.awsRequestId,
             ).create();
         } else if (e instanceof UnauthorizedError) {
+            //return new CustomError(401, e.errorType, e.message, e.errors);
             return new Response.GeneralErrorResponse(
                 401,
                 e.message,

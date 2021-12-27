@@ -7,9 +7,12 @@
   "license": "MIT",
   "description": "",
   "private": true,
+  "config": {
+    "port": "9000"
+  },
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "NODE_ENV=development PORT=9000 nodemon src/app.ts",
+    "dev": "NODE_ENV=development PORT=$npm_package_config_port nodemon src/app.ts",
     "typeorm:cli": "ts-node -r tsconfig-paths/src ./node_modules/typeorm/cli.js -f ormconfig.json",
     "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run --config ormconfig.js",
     "migration:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert --config ormconfig.js",
@@ -21,6 +24,7 @@
   "dependencies": {
     "@types/aws-lambda": "^8.10.86",
     "ajv": "^8.8.2",
+    "aws-event-mocks": "^0.0.0",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",

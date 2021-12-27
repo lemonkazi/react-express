@@ -25,7 +25,7 @@ export interface UserGetParams {
 
 
 export default class UserService extends BaseService {
-    public async _get(queryParams: UserGetParams, email: string) {
+    public async _get(queryParams: UserGetParams, email: string,checkAuth:boolean,checkRole:boolean) {
         return this.transaction(async (manager: EntityManager) => {
             const userDao = new UserDao(manager);
             //const user = await userDao.findByEmail(email);
