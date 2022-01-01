@@ -30,6 +30,12 @@ export const routes: Route[] = [
       checkAuth: true
   },
   {
+    endpoint: '/apis/v1/users/:userId',
+    handler: userHandler,
+    method: RouteMethod.GET,
+    action: null
+  },
+  {
       endpoint: '/apis/v1/users',
       handler: userHandler,
       method: RouteMethod.POST,
