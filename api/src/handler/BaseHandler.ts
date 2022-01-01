@@ -104,6 +104,8 @@ export default abstract class BaseHandlerRDS<Service> {
         const eventQueryParams = this.event.queryStringParameters
             ? this.event.queryStringParameters
             : {};
+     
+
         //this.checkAuth,this.checkRole
         if (this.checkAuth) {
             //logger.log(LogLevel.log, JSON.stringify(this.event.headers.authorization));
@@ -132,9 +134,11 @@ export default abstract class BaseHandlerRDS<Service> {
         ).validate();
 
         try {
-            const id = this.event.pathParameters ? this.event.pathParameters.id : false;
-            const result = await (id
-                ? this.service._getById(id, this.emailUser)
+            const pathParameters = this.event.pathParameters ? this.event.pathParameters : false;
+            
+            //console.log(this.event.pathParameters);
+            const result = await (pathParameters && Object.keys(pathParameters).length != 0
+                ? this.service._getById(pathParameters, this.emailUser)
                 : this.service._get(queryParams, this.emailUser));
             if (result === null || result === undefined) {
                 response = new Response.GetResponse({}).create();
