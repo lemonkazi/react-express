@@ -11,7 +11,7 @@ var express = require("express");
 //var logger = require("morgan");
 var logger = new Logger();
 var cors = require("cors");
-
+var qs = require('qs');
 
 
 var app = express();
@@ -113,6 +113,12 @@ const getRequest = (route: Route) => {
     
     app.get(route.endpoint, async (req: Request, res: Response, next: NextFunction) => {
         console.log('GET ', req.path);
+        
+        //var queryString = Object.keys(req.query).map(key => key + '=' + req.query[key]).join('&');
+        const queryObj = { ...req.query };
+         
+        //console.log(encodeURIComponent(queryObj.email+''));
+        //console.log(decodeURIComponent((queryObj.email+'').replace(/\ /g, '+')));
         console.log('Query params =  ', req.query);
         console.log('Path params =  ', req.params);
         event.httpMethod = route.method;

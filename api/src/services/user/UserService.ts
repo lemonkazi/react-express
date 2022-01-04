@@ -29,6 +29,8 @@ export default class UserService extends BaseService {
         return this.transaction(async (manager: EntityManager) => {
             const userDao = new UserDao(manager);
             //const user = await userDao.findByEmail(email);
+            
+            queryParams.email = decodeURIComponent((queryParams.email+'').replace(/\ /g, '+'));
             const user = await userDao.find(queryParams);
             
             if (user) {

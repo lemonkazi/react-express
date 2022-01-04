@@ -106,7 +106,7 @@ export default abstract class BaseHandlerRDS<Service> {
             : {};
      
 
-        //this.checkAuth,this.checkRole
+        
         if (this.checkAuth) {
             //logger.log(LogLevel.log, JSON.stringify(this.event.headers.authorization));
             
