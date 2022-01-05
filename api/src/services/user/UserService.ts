@@ -29,8 +29,10 @@ export default class UserService extends BaseService {
         return this.transaction(async (manager: EntityManager) => {
             const userDao = new UserDao(manager);
             //const user = await userDao.findByEmail(email);
-            
+            queryParams.email = decodeURIComponent((queryParams.email+'').replace(/\+/g, '%2B'));
+            queryParams.email = decodeURIComponent((queryParams.email+'').replace(/\%2B/g, '+'));
             queryParams.email = decodeURIComponent((queryParams.email+'').replace(/\ /g, '+'));
+            console.log(queryParams.email);
             const user = await userDao.find(queryParams);
             
             if (user) {
@@ -43,16 +45,16 @@ export default class UserService extends BaseService {
     
         const id = parseInt((<any>pathParameters).userId, 10);
         console.log(id);
-        // return this.transaction(async (manager: EntityManager) => {
-        //     const userDao = new UserDao(manager);
-        //     const user = await userDao.findById(id);
-        //     const deleted = await userDao.delete(id);
-        //     if (deleted) {
-        //         return Promise.resolve('USER DELETED');
-        //     } else{
-        //         return Promise.resolve('DELETE FAILED');
-        //     }
-        // });
+        return this.transaction(async (manager: EntityManager) => {
+            const userDao = new UserDao(manager);
+            const user = await userDao.findById(id);
+            //const deleted = await userDao.delete(id);
+            if (user) {
+                return user;
+            } else{
+                return Promise.resolve('FAILED');
+            }
+        });
     }
 
     public async _post(requestBody: UserPostBody, email: string): Promise<User> {
