@@ -30,12 +30,16 @@ export default abstract class BaseDao {
           this.repository.count(),
         ]);
         const pageCount = Math.ceil(count / pageSize);
+        const hasPreviousPage = page > 1;
+        const hasNextPage = page < pageCount;
         return {
           list,
           count,
           page,
           pageSize,
-          pageCount
+          pageCount,
+          hasPreviousPage,
+          hasNextPage
         };
     }
 
