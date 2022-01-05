@@ -20,20 +20,40 @@ interface UserPutBody {
 }
 
 export interface UserGetParams {
-    email: string;
+    email?: string;
+    page?: number;
+    pageSize?: number;
 }
 
 
 export default class UserService extends BaseService {
-    public async _get(queryParams: UserGetParams, email: string,checkAuth:boolean,checkRole:boolean) {
+    public async _get(queryParams: any, email: string) {
         return this.transaction(async (manager: EntityManager) => {
             const userDao = new UserDao(manager);
-            //const user = await userDao.findByEmail(email);
-            queryParams.email = decodeURIComponent((queryParams.email+'').replace(/\+/g, '%2B'));
-            queryParams.email = decodeURIComponent((queryParams.email+'').replace(/\%2B/g, '+'));
-            queryParams.email = decodeURIComponent((queryParams.email+'').replace(/\ /g, '+'));
-            console.log(queryParams.email);
-            const user = await userDao.find(queryParams);
+            if (queryParams.email) {
+               //const user = await userDao.findByEmail(email);
+                queryParams.email = decodeURIComponent((queryParams.email+'').replace(/\+/g, '%2B'));
+                queryParams.email = decodeURIComponent((queryParams.email+'').replace(/\%2B/g, '+'));
+                queryParams.email = decodeURIComponent((queryParams.email+'').replace(/\ /g, '+')); 
+            }
+            
+            //const user = await userDao.find(queryParams);
+            //const user = await userDao.paginatedResults(queryParams,page:1,pageSize:1);
+            if (!queryParams.page) {
+                queryParams.page = 1;
+            }
+            if (!queryParams.pageSize) {
+                queryParams.pageSize = 1;
+            }
+            const { page, pageSize, ...params } = queryParams;
+            
+            console.log(params);
+            //  const page = parseInt(queryParams.page, 10);
+            //  const limit = parseInt(queryParams.pageSize, 10);
+
+            //const user = await userDao.find(queryParams);
+            const user = await userDao.paginatedResults(queryParams.page,queryParams.pageSize,params);
+            // //this.paginatedResults(queryParams,user);
             
             if (user) {
                 return user;
@@ -41,10 +61,13 @@ export default class UserService extends BaseService {
         });
     }
 
+
+    
+
     public async _getById(pathParameters: APIGatewayEvent['pathParameters'], email: string): Promise<any> {
     
         const id = parseInt((<any>pathParameters).userId, 10);
-        console.log(id);
+        
         return this.transaction(async (manager: EntityManager) => {
             const userDao = new UserDao(manager);
             const user = await userDao.findById(id);

@@ -12,6 +12,33 @@ export default abstract class BaseDao {
         return this.repository.find(params);
     }
 
+    public async paginatedResults(page: number,pageSize: number,params?: any) {
+        const condition = params;
+        
+
+        const [list, count] = await Promise.all([
+          this.repository.find({
+            // select: {
+            //   id: true,
+            //   username: true,
+            //   avatarURL: true,
+            // },
+            where: condition,
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+          }),
+          this.repository.count(),
+        ]);
+        const pageCount = Math.ceil(count / pageSize);
+        return {
+          list,
+          count,
+          page,
+          pageSize,
+          pageCount
+        };
+    }
+
     public async findOne(
         conditions: ObjectLiteral,
         options?: FindOneOptions<ObjectLiteral>,
