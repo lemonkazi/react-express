@@ -24,7 +24,7 @@ const bcrypt = require('bcrypt');
 //     ADMIN = 'admin',
 //     SUPER_ADMIN = 'superAdmin',
 // }
-export type UserRole = 'ADMINISTRATOR' | 'STANDARD';
+export type UserRole = 'ADMINISTRATOR' | 'STANDARD' | 'SUPER_ADMIN' | 'USER';
 
 const saltRounds = 6;
 

@@ -22,6 +22,6 @@ export default abstract class BaseService {
     public async isSuperAdmin(email: string, manager: EntityManager) {
         const userDao = new UserDao(manager);
         const user = await userDao.findByEmail(email);
-        return user && user.role === 'ADMINISTRATOR';
+        return user && user.role === 'SUPER_ADMIN';
     }
 }
