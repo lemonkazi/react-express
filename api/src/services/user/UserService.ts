@@ -37,23 +37,15 @@ export default class UserService extends BaseService {
                 queryParams.email = decodeURIComponent((queryParams.email+'').replace(/\ /g, '+')); 
             }
             
-            //const user = await userDao.find(queryParams);
-            //const user = await userDao.paginatedResults(queryParams,page:1,pageSize:1);
             if (!queryParams.page) {
-                queryParams.page = 1;
+                queryParams.page = process.env.FIRST_PAGE;
             }
             if (!queryParams.pageSize) {
-                queryParams.pageSize = 1;
+                queryParams.pageSize = process.env.PAGE_SIZE;
             }
             const { page, pageSize, ...params } = queryParams;
-            
-            console.log(params);
-            //  const page = parseInt(queryParams.page, 10);
-            //  const limit = parseInt(queryParams.pageSize, 10);
-
             //const user = await userDao.find(queryParams);
-            const user = await userDao.paginatedResults(queryParams.page,queryParams.pageSize,params);
-            // //this.paginatedResults(queryParams,user);
+            const user = await userDao.paginatedResults(page,pageSize,params);
             
             if (user) {
                 return user;
