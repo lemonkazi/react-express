@@ -1,6 +1,7 @@
 import { APIGatewayEvent } from 'aws-lambda';
 import { EntityManager } from 'typeorm';
 import UserDao from '../../dao/user/UserDao';
+import OauthAccessTokenDao from '../../dao/auth/OauthAccessTokenDao';
 import { User, UserRole } from '../../entity/User';
 import BaseService from '../BaseService';
 import * as Response from '../../lib/response/response';
@@ -36,6 +37,7 @@ interface JwtPayload {
 
 export interface UserGetParams {
     email: string;
+    password: string;
 }
 
 
@@ -92,6 +94,46 @@ export default class AuthService extends BaseService {
                 
                 
                 const token = createJwtToken(jwtPayload);
+
+                
+
+
+
+                // const OauthAccessTokenDao = new OauthAccessTokenDao(manager,user.id);
+                // const userExist = await OauthAccessTokenDao.findByEmail(requestBody.email);
+
+
+                const authAccessTokenDao = new OauthAccessTokenDao(manager);
+                const authAccessToken = await authAccessTokenDao.create({
+                  userId: user.id,
+                  token: token,
+                  expired: expired
+                });
+
+
+
+                
+                // if (userExist) {
+                //     return Promise.reject({ message: 'User already exist with this email' });
+                //     //return "User already exist with this email";
+                // }
+                // const user = await userDao.create({
+                //     email: requestBody.email,
+                //     role: requestBody.role,
+                //     username: requestBody.username,
+                //     password: requestBody.password
+                // });
+
+                // // if (requestBody.assignees.length > 0) {
+                // //     const assignees = await this.createAssignees(user.id, requestBody.assignees);
+                // //     await assigneeDao.insertAssignees(assignees);
+                // // }
+                // if (user) {
+                //     return await userDao.findById(user.id);
+                // }
+
+
+
 
                 //`Bearer ${token}`
                 //console.log(expired)

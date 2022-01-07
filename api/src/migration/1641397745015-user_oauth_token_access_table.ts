@@ -22,10 +22,9 @@ export class userOauthTokenAccessTable1641397745015 implements MigrationInterfac
                     },
                     {
                         name: 'token',
-                        type: 'varchar',
+                        type: 'text',
                         isNullable: true,
-                        default: null,
-                        length: '255',
+                        default: null
                     },
                     {
                         name: 'expired',
