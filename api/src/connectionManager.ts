@@ -1,6 +1,7 @@
 import { BaseEntity, Connection, createConnection } from 'typeorm';
 import dbConfig from './config';
 import { User } from './entity/User';
+import { UserOauthAccessToken } from './entity/UserOauthAccessToken';
 
 export default class ConnectionManager {
     public static getConnection() {
@@ -19,7 +20,7 @@ export default class ConnectionManager {
                     database: dbConfig.database,
                     entities: [
                         User,
-                        
+                        UserOauthAccessToken,
                     ],
                     synchronize: false,
                     logging: true,
